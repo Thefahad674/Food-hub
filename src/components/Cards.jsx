@@ -2,9 +2,14 @@ import React from 'react'
 import { food_items } from '../food'
 import { GiChickenOven } from "react-icons/gi";
 import { PiLeafLight } from "react-icons/pi";
+import { useDispatch } from "react-redux"
+import { AddItem } from '../redux/cartSlice';
 
 
-const Cards = ({cate}) => {
+const Cards = ({cate, id}) => {
+
+  let dispatch = useDispatch()
+
   return (
      <>
      <div className="flex flex-wrap justify-center items-center">
@@ -33,7 +38,7 @@ const Cards = ({cate}) => {
             </div>
 
             <button className="items-center w-[80%] h-[30px] bg-green-500 rounded-3xl
-            text-white cursor-pointer hover:bg-green-700">
+            text-white cursor-pointer hover:bg-green-700" onClick={()=> dispatch(AddItem({id:id}))}>
               Add to Dish
             </button>
           </div>

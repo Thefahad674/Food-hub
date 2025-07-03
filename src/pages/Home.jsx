@@ -6,6 +6,7 @@ import Cards from "../components/Cards";
 import { dataContext } from "../context/UserContext";
 import { ImCross } from "react-icons/im";
 import Cards2 from "../components/Cards2";
+import { useSelector } from "react-redux";
 
 const Home = () => {
 
@@ -21,9 +22,7 @@ const Home = () => {
       
   } 
 
-  const cartClick = () => {
-     
-  }
+  
 
   return (
     <div className="bg-slate-200 w-full min-h-[100vh]">
