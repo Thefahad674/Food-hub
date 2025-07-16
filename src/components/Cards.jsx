@@ -1,60 +1,68 @@
-import React from 'react'
-import { food_items } from '../food'
-import { GiChickenOven } from "react-icons/gi";
-import { PiLeafLight } from "react-icons/pi";
-import { useDispatch } from "react-redux"
+import React from 'react';
+import { useDispatch } from "react-redux";
 import { AddItem } from '../redux/cartSlice';
 import { toast } from 'react-toastify';
+import { GiChickenOven } from "react-icons/gi";
+import { PiLeafLight } from "react-icons/pi";
 
+const Cards = ({ cate }) => {
+  const dispatch = useDispatch();
 
-const Cards = ({cate}) => {
-
-  let dispatch = useDispatch()
+  const handleAdd = (item) => {
+    dispatch(AddItem({
+      id: item.id,
+      name: item.food_name,
+      price: item.price,
+      qty: item.food_quantity,
+      image: item.food_image
+    }));
+    toast.success("✅ Added to Cart");
+  };
 
   return (
-     <>
-     <div className="flex flex-wrap justify-center items-center">
-        {cate.map((item, index) => (
-          <div
-            key={index}
-            className="flex justify-center items-center flex-col bg-white rounded-md w-[300px] h-[300px] p-1 m-1 px-3 py-0 shadow-xl transition-all hover:border-3 border-green-400 duration-75"
-          >
-            <img
-              className="rounded-xl w-[100%] h-[50%] object-cover"
-              src={item.food_image}
-              alt={item.food_name}
-            />
-            <h1 className="py-1 font-bold whitespace-nowrap overflow-hidden text-ellipsis text-left w-full">{item.food_name}</h1>
-            <div className="flex justify-between w-full py-4">
-              <span className="text-green-500">Rs. {item.price}/-</span>
-              <div className='flex justify-center items-center flex-row'>
+    <div className="flex flex-wrap justify-center gap-6 px-6 py-8 bg-slate-100">
+      {cate.map((item, index) => (
+        <div
+          key={index}
+          className="w-[280px] h-[380px] bg-white rounded-xl shadow hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 border border-gray-200"
+        >
+          <img
+            src={item.food_image}
+            alt={item.food_name}
+            className="w-full h-[170px] object-cover rounded-t-xl"
+          />
 
-              <span className="pr-5 ">{  item.food_type == "non_veg" ?  <GiChickenOven className='text-red-600 text-2xl' /> : <PiLeafLight className='text-green-400 text-2xl gap-0' />}</span>
-              <span className={item.food_type ==="non_veg" ? "text-red-500" : "text-green-500"}>
-                
-                {item.food_type}
-                
-                </span>
+          <div className="p-4 flex flex-col justify-between h-[210px]">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800 truncate">{item.food_name}</h2>
+
+              <div className="flex justify-between items-center mt-2">
+                <span className="text-green-600 font-bold">₹ {item.price}</span>
+                <div className="flex items-center gap-1">
+                  {item.food_type === "non_veg" ? (
+                    <GiChickenOven className="text-red-500 text-xl" />
+                  ) : (
+                    <PiLeafLight className="text-green-500 text-xl" />
+                  )}
+                  <span className={`capitalize font-medium ${item.food_type === "non_veg" ? "text-red-600" : "text-green-600"}`}>
+                    {item.food_type.replace("_", " ")}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <button className="items-center w-[80%] h-[30px] bg-green-500 rounded-3xl
-            text-white cursor-pointer hover:bg-green-700" onClick={()=> {dispatch(AddItem({id:item.id,
-              name:item.food_name,
-              price:item.price,
-              qty:item.food_quantity,
-              image:item.food_image
-            }));
-            toast.success("Item Added")}
-            } >
-              Add to Dish
-            </button>
-          </div>
-        ))}
-      </div>
-     
-     </>
-  )
-}
+           <button
+  onClick={() => handleAdd(item)}
+  className="mt-4 w-full py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold text-sm rounded-full shadow-md hover:shadow-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 flex items-center justify-center gap-2"
+>
+   Add to Cart
+</button>
 
-export default Cards
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Cards;

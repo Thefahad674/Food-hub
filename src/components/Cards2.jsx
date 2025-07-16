@@ -1,40 +1,55 @@
-import React from 'react'
-import image1 from "../assets/image1.avif"
-import { RiDeleteBin6Line } from "react-icons/ri";
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { DecreamentQty, IncreamentQty, RemoveItem } from '../redux/cartSlice';
+import { RiDeleteBin6Line } from "react-icons/ri";
 
-const Cards2 = ({name, id, price, image, qty}) => {
-    let dispatch = useDispatch()
+const Cards2 = ({ name, id, price, image, qty }) => {
+  const dispatch = useDispatch();
+
   return (
-    <div className='w-full h-[120px]  p-2 shadow-lg flex justify-between'>
-        <div className='w-[50%] h-full  flex gap-1'>
-            <div className='w-[50%] h-full overflow-hidden'>
-                <img src={image} alt={name} className='h-full object-cover rounded-lg'/>
-            </div>
-            <div className='w-[40%] h-full flex flex-col gap-5'>
-                <div className='text-lg font-semibold'>{name}</div>
-                <div className='w-[110px] h-[50px]  flex justify-center items-center rounded-lg overflow-hidden shadow-lg border-2 border-green-400 text-xl'>
-                    <button className='w-[30%] h-full bg-white text-green-400 hover:bg-gray-200 mb-1.5' onClick={()=>{qty > 1 ? dispatch(DecreamentQty(id)):1}}>-</button>
-                    <span className='w-[40%] h-full bg-gray-100 flex justify-center items-center'>{qty}</span>
-                    <button className='w-[30%] h-full bg-white text-green-400 hover:bg-gray-200 mb-1.5' onClick={()=>dispatch(IncreamentQty(id))}>+</button>
-                </div>
-            </div>
+    <div className="w-full bg-white rounded-xl shadow p-3 mb-4 flex justify-between items-center">
+      {/* Left - Image + Info */}
+      <div className="flex items-center gap-4">
+        <img
+          src={image}
+          alt={name}
+          className="w-20 h-20 object-cover rounded-md border"
+        />
+
+        <div className="flex flex-col justify-between">
+          <span className="text-base sm:text-lg font-semibold text-gray-800">{name}</span>
+
+          {/* Quantity Controls */}
+          <div className="mt-2 flex items-center border border-green-500 rounded-full overflow-hidden w-fit text-sm">
+            <button
+              onClick={() => qty > 1 && dispatch(DecreamentQty(id))}
+              className="px-3 py-1 bg-white text-green-600 hover:bg-gray-100 font-bold"
+            >
+              −
+            </button>
+            <span className="px-4 py-1 bg-gray-100 text-gray-800 font-medium">
+              {qty}
+            </span>
+            <button
+              onClick={() => dispatch(IncreamentQty(id))}
+              className="px-3 py-1 bg-white text-green-600 hover:bg-gray-100 font-bold"
+            >
+              +
+            </button>
+          </div>
         </div>
+      </div>
 
-
-
-
-
-
-        <div className='flex flex-col justify-start items-end gap-6'>
-       <span className='text-xl text-green-400 font-semibold'>Rs. {price}/-</span>
-       <RiDeleteBin6Line className='w-[30px] h-[30px] text-red-500 cursor-pointer hover:text-red-700' onClick={() => dispatch(RemoveItem(id))} />
-        </div>
-
-
+      {/* Right - Price & Delete */}
+      <div className="flex flex-col items-end justify-between gap-3 h-full">
+        <span className="text-green-600 font-semibold text-lg">₹ {price}</span>
+        <RiDeleteBin6Line
+          className="text-red-500 text-2xl cursor-pointer hover:text-red-600 transition"
+          onClick={() => dispatch(RemoveItem(id))}
+        />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Cards2
+export default Cards2;
