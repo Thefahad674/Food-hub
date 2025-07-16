@@ -31,18 +31,34 @@ const Home = () => {
       <Nav />
 
       {!input && (
-        <div className="flex flex-wrap justify-center gap-6 p-6">
-          {Categories.map((item) => (
-            <div
-              key={item.name}
-              onClick={() => filter(item.name)}
-              className="w-[140px] h-[140px] bg-gradient-to-tr from-green-400 to-green-600 text-white rounded-xl shadow-xl flex flex-col justify-center items-center cursor-pointer transform hover:scale-105 transition-transform duration-300 hover:shadow-2xl"
-            >
-              <div className="text-4xl">{item.image}</div>
-              <p className="mt-4 font-semibold text-center">{item.name}</p>
-            </div>
-          ))}
-        </div>
+        <>
+          {/* Mobile: compact horizontal category bar */}
+          <div className="sm:hidden flex gap-2 overflow-x-auto px-2 py-2 bg-white shadow-inner">
+            {Categories.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => filter(item.name)}
+                className="flex-shrink-0 px-3 py-1 bg-green-500 text-white rounded-full text-xs font-medium whitespace-nowrap hover:bg-green-600 transition-all"
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Desktop: category grid */}
+          <div className="hidden sm:flex flex-wrap justify-center gap-6 p-6">
+            {Categories.map((item) => (
+              <div
+                key={item.name}
+                onClick={() => filter(item.name)}
+                className="w-[140px] h-[140px] bg-gradient-to-tr from-green-400 to-green-600 text-white rounded-xl shadow-xl flex flex-col justify-center items-center cursor-pointer transform hover:scale-105 transition-transform duration-300 hover:shadow-2xl"
+              >
+                <div className="text-4xl">{item.image}</div>
+                <p className="mt-4 font-semibold text-center">{item.name}</p>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {cate.length > 0 ? (
