@@ -2,19 +2,16 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import MenuPage from "./components/MenuPage";
-import AboutPage from "./pages/AboutPage";
 import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
     <>
-      <ToastContainer
-      />
+      <ToastContainer />
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/menu" element={<MenuPage />} />
-          <Route path="/about" element={<AboutPage />} />
+          <Route id="menupage" path="/menu" element={<MenuPage />} />
         </Routes>
       </Router>
     </>

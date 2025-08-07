@@ -1,31 +1,65 @@
 import { Link, useLocation } from "react-router-dom";
-import { FaSearch, FaBars, FaTimes, FaUser } from "react-icons/fa";
+import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import { useContext, useEffect, useState } from "react";
 import { dataContext } from "../context/UserContext";
-import { GiShoppingCart } from "react-icons/gi";
 import { GiForkKnifeSpoon } from "react-icons/gi";
 import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Header = () => {
-  const { input, setInput, food_items, setCate, showCart, setShowCart } =
+  const [activeSection, setActiveSection] = useState("hero");
+  const { input, setInput, food_items, setCate, setShowLogin, showLogin } =
     useContext(dataContext);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const items = useSelector((state) => state.cart);
   const location = useLocation();
 
-  // Scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
+
+      const sections = ["hero", "menu", "about", "contact"];
+      const scrollPosition = window.scrollY + 100;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const offsetTop = element.offsetTop;
+          const offsetHeight = element.offsetHeight;
+
+          if (
+            scrollPosition >= offsetTop &&
+            scrollPosition < offsetTop + offsetHeight
+          ) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Search filtering
+  const scrollToSection = (sectionId) => {
+    if (sectionId === "menu" && location.pathname !== "/") {
+      return;
+    }
+
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+    setMobileMenuOpen(false);
+  };
+
   useEffect(() => {
     const newList =
       food_items?.filter((item) =>
@@ -43,10 +77,9 @@ const Header = () => {
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
-      <div className="container mx-auto px-4 py-3">
-        {/* Main Navigation Row */}
+      <div className="container mx-auto px-4 py-3 max-md:px-2 max-md:py-2">
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo + Mobile Menu Icon */}
           <motion.div
             className="flex items-center gap-4"
             whileHover={{ scale: 1.05 }}
@@ -62,7 +95,10 @@ const Header = () => {
               )}
             </button>
 
-            <Link to="/" className="flex items-center text-xl font-bold">
+            <button
+              onClick={() => scrollToSection("hero")}
+              className="flex items-center text-xl font-bold"
+            >
               <motion.div
                 className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center mr-2"
                 whileHover={{ rotate: 15 }}
@@ -72,12 +108,11 @@ const Header = () => {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-400">
                 Delicious Bites
               </span>
-            </Link>
+            </button>
           </motion.div>
 
-          {/* Desktop Navigation and Search */}
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center flex-1 mx-8">
-            {/* Desktop Search */}
             <motion.div
               className="flex-1 max-w-xl"
               initial={{ opacity: 0 }}
@@ -99,26 +134,42 @@ const Header = () => {
               </form>
             </motion.div>
 
-            {/* Desktop Navigation */}
             <nav className="ml-8">
               <div className="flex space-x-1">
                 {[
-                  { path: "/", name: "Home" },
-                  { path: "/menu", name: "Menu" },
-                  { path: "/about", name: "About" },
-                  { path: "contact", name: "Contact" },
+                  { id: "hero", name: "Home" },
+                  { id: "menu", name: "Menu" },
+                  { id: "about", name: "About" },
+                  { id: "contact", name: "Contact" },
                 ].map((item) => (
-                  <motion.div key={item.path} whileHover={{ scale: 1.05 }}>
-                    <Link
-                      to={item.path}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                        location.pathname === item.path
-                          ? "bg-amber-100 text-amber-700"
-                          : "text-gray-700 hover:bg-amber-50"
-                      }`}
-                    >
-                      {item.name}
-                    </Link>
+                  <motion.div
+                    key={item.id}
+                    className="flex flex-row items-center justify-center"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    {item.id === "menu" ? (
+                      <Link
+                        to="/menu"
+                        className={`px-4 py-2 min-w-[90px] text-center rounded-lg font-medium transition-colors ${
+                          location.pathname === "/menu"
+                            ? "bg-amber-100 text-amber-700"
+                            : "text-gray-700 hover:bg-amber-50"
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                    ) : (
+                      <button
+                        onClick={() => scrollToSection(item.id)}
+                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                          activeSection === item.id
+                            ? "bg-amber-100 text-amber-700"
+                            : "text-gray-700 hover:bg-amber-50"
+                        }`}
+                      >
+                        {item.name}
+                      </button>
+                    )}
                   </motion.div>
                 ))}
               </div>
@@ -126,7 +177,7 @@ const Header = () => {
           </div>
 
           {/* Right Side Icons */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 max-md:gap-2">
             {/* Mobile Search Toggle */}
             <motion.button
               className="md:hidden text-gray-800 relative"
@@ -140,21 +191,22 @@ const Header = () => {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                 >
-                  {input.length > 0 ? "•" : ""}
+                  •
                 </motion.span>
               )}
             </motion.button>
 
-            {/* User Profile */}
+            {/* Login Button */}
             <motion.button
-              className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-amber-50 text-amber-600"
+              className="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 md:px-8 md:py-3 rounded-full font-medium transition duration-300 shadow-lg hover:shadow-amber-200 flex items-center justify-center"
               whileHover={{
                 scale: 1.1,
                 backgroundColor: "#f59e0b",
                 color: "white",
               }}
+              onClick={() => setShowLogin(!showLogin)}
             >
-              <FaUser className="h-4 w-4" />
+              <span>Login</span>
             </motion.button>
 
             {/* Cart */}
@@ -162,24 +214,7 @@ const Header = () => {
               className="relative"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-            >
-              <button
-                className="w-10 h-10 flex justify-center items-center rounded-full bg-amber-50 text-amber-600"
-                onClick={() => setShowCart(true)}
-              >
-                <GiShoppingCart className="h-5 w-5" />
-                {items.length > 0 && (
-                  <motion.span
-                    className="absolute -top-1 -right-1 bg-amber-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring" }}
-                  >
-                    {items.length}
-                  </motion.span>
-                )}
-              </button>
-            </motion.div>
+            ></motion.div>
           </div>
         </div>
 
@@ -187,14 +222,14 @@ const Header = () => {
         <AnimatePresence>
           {showSearch && (
             <motion.form
-              className="md:hidden w-full mt-3"
+              className="md:hidden w-full mt-3 px-1"
               onSubmit={(e) => e.preventDefault()}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="h-12 bg-white flex items-center px-4 gap-3 rounded-full shadow-sm border border-amber-100">
+              <div className="h-12 bg-white flex items-center px-4 gap-3 rounded-full shadow-sm border border-amber-100 max-md:mt-2 max-md:mb-2">
                 <FaSearch className="text-amber-500 w-4 h-4" />
                 <input
                   type="text"
@@ -213,31 +248,44 @@ const Header = () => {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.nav
-              className="md:hidden"
+              className="md:hidden w-full bg-white px-4"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="flex flex-col space-y-3 mt-4 pb-3 border-b border-amber-100">
+              <div className="flex flex-col space-y-2 mt-4 pb-4">
                 {[
-                  { path: "/", name: "Home" },
-                  { path: "/menu", name: "Menu" },
-                  { path: "/about", name: "About" },
-                  { path: "contact", name: "Contact" },
+                  { id: "hero", name: "Home" },
+                  { id: "menu", name: "Menu" },
+                  { id: "about", name: "About" },
+                  { id: "contact", name: "Contact" },
                 ].map((item) => (
-                  <motion.div key={item.path} whileHover={{ x: 5 }}>
-                    <Link
-                      to={item.path}
-                      className={`flex items-center py-2 px-3 rounded-lg transition-colors ${
-                        location.pathname === item.path
-                          ? "bg-amber-100 text-amber-700"
-                          : "text-gray-700 hover:bg-amber-50"
-                      }`}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <span className="font-medium">{item.name}</span>
-                    </Link>
+                  <motion.div key={item.id} whileHover={{ x: 5 }}>
+                    {item.id === "menu" ? (
+                      <Link
+                        to="/menu"
+                        className={`flex items-center py-2 px-3 rounded-lg transition-colors ${
+                          location.pathname === "/menu"
+                            ? "bg-amber-100 text-amber-700"
+                            : "text-gray-700 hover:bg-amber-50"
+                        }`}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <span className="font-medium">{item.name}</span>
+                      </Link>
+                    ) : (
+                      <button
+                        onClick={() => scrollToSection(item.id)}
+                        className={`flex items-center py-2 px-3 rounded-lg transition-colors w-full text-left ${
+                          activeSection === item.id
+                            ? "bg-amber-100 text-amber-700"
+                            : "text-gray-700 hover:bg-amber-50"
+                        }`}
+                      >
+                        <span className="font-medium">{item.name}</span>
+                      </button>
+                    )}
                   </motion.div>
                 ))}
               </div>

@@ -2,9 +2,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { GiChefToque, GiMeal, GiFarmTractor, GiSaucepan } from 'react-icons/gi';
 import { FaLeaf, FaAward } from 'react-icons/fa';
+import { IoIosArrowBack } from "react-icons/io";
+import { useNavigate } from 'react-router-dom';
 
 const AboutPage = () => {
-  // Animation variants
+  const navigate = useNavigate()
+ 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -29,16 +32,19 @@ const AboutPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-amber-100">
+    <>
+    <section id='about' className="min-h-screen bg-gradient-to-b from-amber-50 to-amber-100">
+      
       {/* Hero Section */}
       <section className="relative h-64 md:h-96 flex items-center justify-center bg-gradient-to-r from-amber-400 to-amber-600 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
+        
+      
         <motion.div 
           className="container mx-auto px-4 z-10 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-        >
+          >
           <h1 className="text-4xl md:text-6xl font-bold mb-4">Our Story</h1>
           <p className="text-xl md:text-2xl max-w-2xl mx-auto">
             Passion for food, love for community
@@ -53,17 +59,17 @@ const AboutPage = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-        >
+          >
           <motion.h2 
             className="text-3xl md:text-4xl font-bold text-amber-800 mb-8"
             variants={itemVariants}
-          >
+            >
             Delicious Bites Journey
           </motion.h2>
           <motion.p 
             className="text-lg text-gray-700 mb-8"
             variants={itemVariants}
-          >
+            >
             Founded in 2015, Delicious Bites began as a small family restaurant with a simple mission: to serve 
             authentic, flavorful dishes made with locally-sourced ingredients. What started as a humble kitchen 
             has grown into a beloved culinary destination, thanks to our amazing customers and dedicated team.
@@ -71,7 +77,7 @@ const AboutPage = () => {
           <motion.p 
             className="text-lg text-gray-700"
             variants={itemVariants}
-          >
+            >
             Today, we continue to honor our roots while innovating with seasonal ingredients and modern techniques, 
             always staying true to our commitment to quality and sustainability.
           </motion.p>
@@ -87,7 +93,7 @@ const AboutPage = () => {
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-          >
+            >
             Our Core Values
           </motion.h2>
 
@@ -115,12 +121,12 @@ const AboutPage = () => {
               }
             ].map((item, index) => (
               <motion.div 
-                key={index}
-                className="bg-white p-6 rounded-xl shadow-sm text-center"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
+              key={index}
+              className="bg-white p-6 rounded-xl shadow-sm text-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
               >
                 <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   {item.icon}
@@ -141,7 +147,7 @@ const AboutPage = () => {
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-        >
+          >
           Meet Our Chef
         </motion.h2>
 
@@ -152,13 +158,13 @@ const AboutPage = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-          >
+            >
             <div className="md:w-1/3">
               <img 
                 src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" 
                 alt="Head Chef" 
                 className="w-full h-64 md:h-full object-cover"
-              />
+                />
             </div>
             <div className="md:w-2/3 p-6">
               <h3 className="text-2xl font-bold text-amber-800 mb-2">Chef Rajesh Kumar</h3>
@@ -184,7 +190,7 @@ const AboutPage = () => {
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-          >
+            >
             Ready to Experience Our Food?
           </motion.h2>
           <motion.div
@@ -193,7 +199,7 @@ const AboutPage = () => {
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
             viewport={{ once: true }}
-          >
+            >
             <button className="bg-white text-amber-700 px-8 py-3 rounded-full font-medium hover:bg-amber-50 transition duration-300">
               View Our Menu
             </button>
@@ -203,7 +209,8 @@ const AboutPage = () => {
           </motion.div>
         </div>
       </section>
-    </div>
+    </section>
+            </>
   );
 };
 

@@ -1,186 +1,145 @@
-import React, { useContext } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { GiMeal, GiShoppingCart } from "react-icons/gi";
-import { RxCross1 } from "react-icons/rx";
-import { FaLeaf, FaHamburger, FaPizzaSlice, FaIceCream } from "react-icons/fa";
-import { BiDrink } from "react-icons/bi";
-import { dataContext } from "../context/UserContext";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import Cards2 from "../components/Cards2";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
-import Cards from "../components/Cards";
-import Cards2 from "../components/Cards2";
-
+import { TestimonialCard } from "../components/TestimonialCard";
+import { motion, AnimatePresence } from "framer-motion";
+import AboutPage from "./AboutPage";
+import ContactPage from "./ContactPage";
+import Login from "../components/Login";
+import { useContext, useState } from "react";
+import { dataContext } from "../context/UserContext";
+import Footer from "../components/Footer";
 
 const Home = () => {
-  const { cate, setCate, input, showCart, setShowCart } =
-    useContext(dataContext);
-  const items = useSelector((state) => state.cart);
+  const {showLogin} = useContext(dataContext)
 
-  // Enhanced categories with matching icons
-  const Categories = [
-    { name: "All", image: <GiMeal className="text-3xl" /> },
-    { name: "Breakfast", image: <FaLeaf className="text-3xl" /> },
-    { name: "Lunch", image: <GiMeal className="text-3xl" /> },
-    { name: "Dinner", image: <FaHamburger className="text-3xl" /> },
-    { name: "Pizza", image: <FaPizzaSlice className="text-3xl" /> },
-    { name: "Dessert", image: <FaIceCream className="text-3xl" /> },
-    { name: "Drinks", image: <BiDrink className="text-3xl" /> },
+  const navigate = useNavigate();
+  const featuredDishes = [
+    {
+      id: 1,
+      name: "Truffle Pasta",
+      price: "219",
+      desc: "Creamy sauce with wild mushrooms",
+      image: "/image6.avif",
+    },
+    {
+      id: 2,
+      name: "Chicken Burger",
+      price: "199",
+      desc: "With lemon butter sauce",
+      image: "/image12.jpg",
+    },
+    {
+      id: 3,
+      name: "Garlic Bread",
+      price: "199",
+      desc: "With lemon butter sauce",
+      image: "/image19.avif",
+    },
+    {
+      id: 3,
+      name: "Pancake",
+      price: "199",
+      desc: "",
+      image: "/image1.avif",
+    },
+    
   ];
 
-  const filter = (category) => {
-    if (category === "All") {
-      setCate(food_items);
-    } else {
-      setCate(food_items.filter((item) => item.food_category === category));
-    }
-  };
-
-  const subtotal = items.reduce(
-    (total, item) => total + item.qty * item.price,
-    0
-  );
-  const deliveryFee = 20;
-  const taxes = Math.round((subtotal * 2) / 100);
-  const total = Math.floor(subtotal + deliveryFee + taxes);
+  const testimonials = [
+    { id: 1, quote: "Best food in town!", author: "Jane D.", rating: 5 },
+    { id: 2, quote: "A must-visit!", author: "Mike T.", rating: 4 },
+  ];
 
   return (
+    <>
+    {showLogin ? <Login /> : 
     <div className="min-h-screen w-full bg-gradient-to-br from-amber-50 via-amber-100 to-amber-200">
       <Header />
       <Hero />
 
-      <AnimatePresence>
-        {!input && (
-          <>
-            {/* Mobile: compact horizontal category bar */}
-            <motion.div
-              className="sm:hidden flex gap-2 overflow-x-auto px-4 py-3 bg-amber-100 shadow-inner"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              {Categories.map((item) => (
-                <motion.button
-                  key={item.name}
-                  onClick={() => filter(item.name)}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex-shrink-0 px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full text-sm font-medium whitespace-nowrap hover:from-amber-600 hover:to-amber-700 transition-all shadow-md"
-                >
-                  {item.name}
-                </motion.button>
-              ))}
-            </motion.div>
+      <section className="py-20 bg-gradient-to-b from-amber-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Customer's <span className="text-amber-600">Favourites</span>
+            </h2>
+            <div className="w-24 h-1 bg-amber-500 mx-auto"></div>
+          </div>
 
-            {/* Desktop: category grid */}
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Slide-in Cart */}
-      <AnimatePresence>
-        {showCart && (
-          <motion.div
-            className="fixed top-0 right-0 h-full w-full sm:w-[80vw] md:w-[60vw] lg:w-[40vw] z-50"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 30 }}
-          >
-            <div className="h-full backdrop-blur-md bg-white/90 shadow-2xl rounded-l-xl flex flex-col border-l-2 border-amber-300">
-              <header className="flex justify-between items-center px-6 py-4 border-b border-amber-200 bg-gradient-to-r from-amber-100 to-amber-50">
-                <h2 className="text-xl font-bold text-amber-700 flex items-center gap-2">
-                  <GiShoppingCart className="text-amber-600" /> Your Cart
-                </h2>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setShowCart(false)}
-                >
-                  <RxCross1 className="text-amber-600 hover:text-red-600" />
-                </motion.button>
-              </header>
-
-              {items.length === 0 ? (
-                <motion.div
-                  className="flex-grow flex flex-col items-center justify-center text-amber-500 p-8"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  <GiShoppingCart className="text-6xl mb-4 opacity-30" />
-                  <p className="text-xl font-semibold">Your cart is empty</p>
-                  <p className="text-amber-400 mt-2">
-                    Add some delicious items!
-                  </p>
-                </motion.div>
-              ) : (
-                <div className="flex-grow p-4 overflow-y-auto">
-                  <AnimatePresence>
-                    {items.map((item) => (
-                      <motion.div
-                        key={item.id}
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 50 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <Cards2 {...item} />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-
-                  <div className="mt-6 border-t border-amber-200 pt-4 text-amber-800">
-                    <div className="flex justify-between py-2 text-lg">
-                      <span>Subtotal</span>
-                      <span className="text-amber-600 font-semibold">
-                        ₹ {subtotal}
-                      </span>
-                    </div>
-                    <div className="flex justify-between py-2 text-lg">
-                      <span>Delivery</span>
-                      <span className="text-amber-600 font-semibold">
-                        ₹ {deliveryFee}
-                      </span>
-                    </div>
-                    <div className="flex justify-between py-2 text-lg">
-                      <span>Taxes (2%)</span>
-                      <span className="text-amber-600 font-semibold">
-                        ₹ {taxes}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center pt-4 mt-4 border-t-2 border-amber-300 text-xl font-bold">
-                      <span>Total</span>
-                      <span className="text-amber-700">₹ {total}/-</span>
-                    </div>
-                  </div>
-
-                  <motion.div className="mt-6" whileHover={{ scale: 1.01 }}>
-                    <button
-                      className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold rounded-full shadow-lg hover:shadow-amber-300/50 hover:from-amber-600 hover:to-amber-700 transition-all"
-                      onClick={() => {
-                        toast.success("🍽️ Order Placed Successfully!", {
-                          position: "top-center",
-                          autoClose: 3000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          theme: "light",
-                        });
-                        setShowCart(false);
-                      }}
-                    >
-                      Place Order
-                    </button>
-                  </motion.div>
+          {/* Dishes Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
+            {featuredDishes.map((dish) => (
+              <motion.div
+              key={dish.id}
+                className="group relative bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500"
+                whileHover={{ y: -10 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                {/* Dish Image */}
+                <div className="h-64 overflow-hidden">
+                  <img
+                    src={dish.image}
+                    alt={dish.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+
+                {/* Dish Badge */}
+                {dish.isNew && (
+                  <div className="absolute top-4 right-4 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                    NEW
+                  </div>
+                )}
+
+                {/* Dish Content */}
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    {dish.name}
+                  </h3>
+                  <p className="text-gray-600 mb-4">{dish.description}</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-2xl font-bold text-amber-600">
+                      <span>Starting from </span>
+                      ₹{dish.price}/- Only
+                    </span>
+                    
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* View More Button */}
+          <div className="text-center">
+            <motion.button
+              onClick={() => navigate("/menu")}
+              className="relative px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl overflow-hidden group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              >
+              <span className="relative z-10 text-lg flex items-center justify-center gap-2">
+                Explore Full Menu{" "}
+                {/* <FiArrowRight className="transition-transform group-hover:translate-x-1" /> */}
+              </span>
+              <motion.span
+                className="absolute inset-0 bg-gradient-to-r from-amber-600 to-amber-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                initial={{ opacity: 0 }}
+                />
+            </motion.button>
+          </div>
+        </div>
+      </section>
+      <AboutPage id='aboutpage' />
+      <ContactPage id='contactpage' />
+      <Footer />
+    </div>}
+                </>
   );
 };
 

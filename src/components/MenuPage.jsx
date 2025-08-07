@@ -2,62 +2,56 @@ import React, { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
+import { LuSoup } from "react-icons/lu";
 import { AddItem } from "../redux/cartSlice";
 import { toast } from "react-toastify";
 import { food_items } from "../food";
 import { IoIosArrowBack } from "react-icons/io";
+import { LuCoffee } from "react-icons/lu";
 import {
   GiMeal,
   GiChickenOven,
   GiForkKnifeSpoon,
   GiSaucepan,
-  GiCook,
   GiShoppingCart,
 } from "react-icons/gi";
 import {
-  FaLeaf,
   FaHamburger,
   FaPizzaSlice,
-  FaIceCream,
   FaCartPlus,
-  FaUser,
 } from "react-icons/fa";
-import { BiDrink } from "react-icons/bi";
 import { PiLeafLight } from "react-icons/pi";
 import { dataContext } from "../context/UserContext";
 import { RxCross1 } from "react-icons/rx";
 import Cards2 from "./Cards2";
 
 const MenuPage = () => {
-  const { cate, setCate, input, showCart, setShowCart } =
+  const { showCart, setShowCart } =
     useContext(dataContext);
   const items = useSelector((state) => state.cart);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Sample categories with icons
+ 
   const categories = [
     { name: "All", icon: <GiMeal className="text-3xl" /> },
-    { name: "Breakfast", icon: <FaLeaf className="text-3xl" /> },
-    { name: "Lunch", icon: <GiForkKnifeSpoon className="text-3xl" /> },
-    { name: "Dinner", icon: <GiSaucepan className="text-3xl" /> },
-    { name: "Pizza", icon: <FaPizzaSlice className="text-3xl" /> },
+    { name: "Breakfast", icon: <LuCoffee  className="text-3xl" /> },
+    { name: "Soups", icon: <LuSoup  className="text-3xl" /> },
+    { name: "Pasta", icon: <GiSaucepan className="text-3xl" /> },
+    { name: "Main_Course", icon: <GiForkKnifeSpoon className="text-3xl" /> },
+    { name: "Pizza", icon: < FaPizzaSlice className="text-3xl" /> },
     { name: "Burgers", icon: <FaHamburger className="text-3xl" /> },
-    { name: "Desserts", icon: <FaIceCream className="text-3xl" /> },
-    { name: "Drinks", icon: <BiDrink className="text-3xl" /> },
   ];
 
   const foodItems = {
     All: food_items,
     Breakfast: food_items.filter((item) => item.food_category === "Breakfast"),
-    Lunch: food_items.filter((item) => item.food_category === "Lunch"),
-    Dinner: food_items.filter((item) => item.food_category === "Dinner"),
+    Soups: food_items.filter((item) => item.food_category === "Soups"),
+    Pasta: food_items.filter((item) => item.food_category === "Pasta"),
+    Main_Course: food_items.filter((item) => item.food_category === "Main-course"),
     Pizza: food_items.filter((item) => item.food_category === "Pizza"),
-    Burgers: food_items.filter((item) => item.food_category === "Burgers"),
-    Desserts: food_items.filter((item) => item.food_category === "Desserts"),
-    Drinks: food_items.filter((item) => item.food_category === "Drinks"),
+    Burgers: food_items.filter((item) => item.food_category === "Burger"),
   };
 
   const handleAdd = (item) => {
@@ -82,7 +76,7 @@ const MenuPage = () => {
     });
   };
 
-  // Animation variants
+ 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -110,7 +104,7 @@ const MenuPage = () => {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-b from-amber-50 to-amber-100">
-        {/* Menu Categories Section */}
+       
         <section id="menu-categories" className="container mx-auto px-4 py-8">
           <div className="flex flex-row justify-between">
             <IoIosArrowBack

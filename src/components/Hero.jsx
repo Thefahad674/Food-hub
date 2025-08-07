@@ -4,8 +4,8 @@ import { GiCook, GiMeal } from "react-icons/gi";
 
 const Hero = () => {
   return (
-    <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-amber-100 to-amber-200 overflow-hidden">
-      {/* Decorative elements */}
+    <section id="hero" className="relative h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-amber-100 to-amber-200 overflow-hidden">
+       
       <motion.div
         className="absolute top-20 left-20 text-amber-300 opacity-20 text-9xl"
         animate={{ rotate: 360 }}
@@ -75,7 +75,7 @@ const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Scrolling indicator */}
+      
       <motion.div
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
         animate={{ y: [0, 10, 0] }}
